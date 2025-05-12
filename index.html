@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Wallet Popup PoC</title>
+</head>
+<body>
+  <h2>This is a PoC of MetaMask popup</h2>
+  <button id="connect">Connect Wallet</button>
+  <script>
+    // Wait for the DOM to load
+    document.addEventListener('DOMContentLoaded', async () => {
+      const btn = document.getElementById('connect');
+
+      btn.click(); // Auto-click
+
+      btn.addEventListener('click', async () => {
+        if (typeof window.ethereum !== 'undefined') {
+          try {
+            await ethereum.request({ method: 'eth_requestAccounts' });
+            alert('Wallet connected!');
+          } catch (err) {
+            alert('Connection rejected.');
+          }
+        } else {
+          alert('MetaMask not detected');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
